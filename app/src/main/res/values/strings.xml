@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DynamicTabFrame</string>
+
+    <string name="tab_manage">标签管理</string>
+
+</resources>

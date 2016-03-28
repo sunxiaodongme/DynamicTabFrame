@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1080p_150"
+        android:background="@color/color_04131b"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/title_layout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_1080p_150"
+            android:layout_weight="1.0">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimen_1080p_48"
+                android:text="@string/tab_manage"
+                android:textColor="@color/color_9a9a9a"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1080p_150"
+                android:fillViewport="false"
+                app:tabBackground="@color/color_04131b"
+                app:tabIndicatorColor="@color/color_ffcd34"
+                app:tabIndicatorHeight="@dimen/dimen_1080p_9"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/color_ffcd34"
+                app:tabTextColor="@color/color_ffffff" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/tab_edit_icon"
+            android:layout_width="@dimen/dimen_1080p_150"
+            android:layout_height="@dimen/dimen_1080p_150"
+            android:background="@drawable/drawable_04131b_030d12_selector"
+            android:scaleType="centerInside"
+            android:src="@drawable/tab_edit_icon_selector" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1080p_1"
+        android:background="@color/color_d9d9d9"
+        android:visibility="gone" />
+
+    <!-- 页面内容 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 遮罩层 -->
+
+        <View
+            android:id="@+id/mask_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_50000000"
+            android:visibility="gone" />
+
+        <!-- tab增加，删除处理层 -->
+        <!--<include layout="@layout/news_tabs_deal_layout" />-->
+
+    </RelativeLayout>
+
+</LinearLayout>
