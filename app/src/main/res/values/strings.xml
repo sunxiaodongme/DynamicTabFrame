@@ -2,5 +2,8 @@
     <string name="app_name">DynamicTabFrame</string>
 
     <string name="tab_manage">标签管理</string>
+    <string name="me_tab">我的标签</string>
+    <string name="me_tab_opera_tip">单击增删标签，长按拖拽排序</string>
+    <string name="more_tab">更多标签</string>
 
 </resources>

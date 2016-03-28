@@ -5,7 +5,12 @@
 
     <dimen name="dimen_1080p_1">0.33dp</dimen>
     <dimen name="dimen_1080p_9">3dp</dimen>
+    <dimen name="dimen_1080p_30">10dp</dimen>
+    <dimen name="dimen_1080p_36">12dp</dimen>
+    <dimen name="dimen_1080p_42">14dp</dimen>
     <dimen name="dimen_1080p_48">16dp</dimen>
+    <dimen name="dimen_1080p_90">30dp</dimen>
     <dimen name="dimen_1080p_150">50dp</dimen>
+    <dimen name="dimen_1080p_201">87dp</dimen>
 
 </resources>

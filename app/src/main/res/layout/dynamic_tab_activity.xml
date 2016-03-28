@@ -77,7 +77,8 @@
             android:visibility="gone" />
 
         <!-- tab增加，删除处理层 -->
-        <!--<include layout="@layout/news_tabs_deal_layout" />-->
+
+        <include layout="@layout/tabs_deal_layout" />
 
     </RelativeLayout>
 
