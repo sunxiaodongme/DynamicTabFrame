@@ -10,6 +10,7 @@
     <dimen name="dimen_1080p_42">14dp</dimen>
     <dimen name="dimen_1080p_48">16dp</dimen>
     <dimen name="dimen_1080p_90">30dp</dimen>
+    <dimen name="dimen_1080p_120">40dp</dimen>
     <dimen name="dimen_1080p_150">50dp</dimen>
     <dimen name="dimen_1080p_201">87dp</dimen>
 

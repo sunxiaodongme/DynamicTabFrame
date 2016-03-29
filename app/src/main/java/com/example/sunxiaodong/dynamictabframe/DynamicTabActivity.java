@@ -79,6 +79,13 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
 
     private void initMeRecyclerView() {
         mMeDragSortAdapter = new DragSortAdapter(this, null);
+        mMeDragSortAdapter.setOnItemClickListener(new DragSortAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, TabBean data) {
+                mMeDragSortAdapter.onItemDismiss(position);
+                mMoreDragSortAdapter.addItemAtEnd(data);
+            }
+        });
         mMeRecyclerView.setHasFixedSize(true);
         mMeRecyclerView.setAdapter(mMeDragSortAdapter);
 
@@ -93,6 +100,13 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
 
     private void initMoreRecyclerView() {
         mMoreDragSortAdapter = new DragSortAdapter(this, null);
+        mMoreDragSortAdapter.setOnItemClickListener(new DragSortAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, TabBean data) {
+                mMoreDragSortAdapter.onItemDismiss(position);
+                mMeDragSortAdapter.addItemAtEnd(data);
+            }
+        });
         mMoreRecyclerView.setHasFixedSize(true);
         mMoreRecyclerView.setAdapter(mMoreDragSortAdapter);
 
@@ -200,7 +214,7 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         final int tabPos = mDynamicTabPagerAdapter.getRecoverTabPos(tagBeanList);
         mCurrAddedToFMFragmentMap = currRetainFragmentMap;
         mDynamicTabPagerAdapter.update(tagBeanList, fragmentList);
-        mTabLayout.setTabsFromPagerAdapter(mDynamicTabPagerAdapter);
+//        mTabLayout.setTabsFromPagerAdapter(mDynamicTabPagerAdapter);
         mTabLayout.post(new Runnable() {
             @Override
             public void run() {

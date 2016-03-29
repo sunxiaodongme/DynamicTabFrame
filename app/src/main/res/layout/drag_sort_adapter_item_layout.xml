@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/drag_sort_item_text_bg_selector"
-        android:gravity="center"
-        android:minHeight="@dimen/dimen_1080p_90"
-        android:minWidth="@dimen/dimen_1080p_201"
-        android:textColor="@color/color_ff454545_ffb9b9b9_ffcc3131_selector"
-        android:textSize="14.0sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1080p_120">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/drag_sort_item_text_bg_selector"
+            android:gravity="center"
+            android:minHeight="@dimen/dimen_1080p_90"
+            android:minWidth="@dimen/dimen_1080p_201"
+            android:textColor="@color/color_ff454545_ffb9b9b9_ffcc3131_selector"
+            android:textSize="14.0sp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.sunxiaodong.dynamictabframe.DragSortAdapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
     private List<TabBean> mTabBeanList = new ArrayList<>();
 
     private Context mContext;
-    private final OnStartDragListener mDragStartListener;
+    private OnStartDragListener mDragStartListener;
 
     public DragSortAdapter(Context context, OnStartDragListener dragStartListener) {
         mContext = context;
@@ -60,7 +61,9 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.textView.setText(mTabBeanList.get(position).getName());
+        TabBean tabBean = mTabBeanList.get(position);
+        holder.textView.setText(tabBean.getName());
+        holder.rootView.setOnClickListener(new OnItemClickListener(position, tabBean));
     }
 
     @Override
@@ -81,16 +84,42 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
         notifyItemRemoved(position);
     }
 
+    public void addItemAtEnd(TabBean tabBean) {
+        int position = mTabBeanList.size();
+        mTabBeanList.add(tabBean);
+        notifyItemInserted(position);
+    }
+
+    class OnItemClickListener implements View.OnClickListener {
+
+        private int position;
+        private TabBean tabBean;
+
+        public OnItemClickListener(int position, TabBean tabBean) {
+            this.position = position;
+            this.tabBean = tabBean;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(v, position, tabBean);
+            }
+        }
+    }
+
     /**
      * 列表项ViewHolder
      */
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
 
+        public final View rootView;
         public final TextView textView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            rootView = itemView;
             textView = (TextView) itemView.findViewById(R.id.text);
         }
 
@@ -105,4 +134,15 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
         }
 
     }
+
+    private OnRecyclerViewItemClickListener onItemClickListener;
+
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view, int position, TabBean data);
+    }
+
+    public void setOnItemClickListener(OnRecyclerViewItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
 }
