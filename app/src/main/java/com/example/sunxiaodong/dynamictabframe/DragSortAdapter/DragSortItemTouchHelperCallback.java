@@ -9,6 +9,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  */
 public class DragSortItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
+    private static final String TAG = DragSortItemTouchHelperCallback.class.getSimpleName();
+    private static final String SXD = "sxd";
+
     public static final float ALPHA_FULL = 1.0f;
 
     private final ItemTouchHelperAdapter mAdapter;

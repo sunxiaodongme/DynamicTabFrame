@@ -214,7 +214,6 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         final int tabPos = mDynamicTabPagerAdapter.getRecoverTabPos(tagBeanList);
         mCurrAddedToFMFragmentMap = currRetainFragmentMap;
         mDynamicTabPagerAdapter.update(tagBeanList, fragmentList);
-//        mTabLayout.setTabsFromPagerAdapter(mDynamicTabPagerAdapter);
         mTabLayout.post(new Runnable() {
             @Override
             public void run() {

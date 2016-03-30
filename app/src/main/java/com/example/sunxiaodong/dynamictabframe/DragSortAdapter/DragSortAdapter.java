@@ -21,6 +21,9 @@ import java.util.List;
  */
 public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
 
+    private static final String TAG = DragSortAdapter.class.getSimpleName();
+    private static final String SXD = "sxd";
+
     private List<TabBean> mTabBeanList = new ArrayList<>();
 
     private Context mContext;
@@ -73,7 +76,19 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(mTabBeanList, fromPosition, toPosition);
+        Log.i(SXD, TAG + "--onItemMove++fromPosition:" + fromPosition + ",toPosition:" + toPosition);
+        if (toPosition > fromPosition) {
+            //从前往后移动列表项
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mTabBeanList, i, i + 1);
+
+            }
+        } else {
+            //从后往前移动列表项
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mTabBeanList, i, i - 1);
+            }
+        }
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
@@ -81,31 +96,12 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
     @Override
     public void onItemDismiss(int position) {
         mTabBeanList.remove(position);
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
     public void addItemAtEnd(TabBean tabBean) {
-        int position = mTabBeanList.size();
         mTabBeanList.add(tabBean);
-        notifyItemInserted(position);
-    }
-
-    class OnItemClickListener implements View.OnClickListener {
-
-        private int position;
-        private TabBean tabBean;
-
-        public OnItemClickListener(int position, TabBean tabBean) {
-            this.position = position;
-            this.tabBean = tabBean;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(v, position, tabBean);
-            }
-        }
+        notifyDataSetChanged();
     }
 
     /**
@@ -135,14 +131,39 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
 
     }
 
+    //============================================设置列表项点击事件===============================start
+
     private OnRecyclerViewItemClickListener onItemClickListener;
 
-    public static interface OnRecyclerViewItemClickListener {
+    public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position, TabBean data);
     }
 
     public void setOnItemClickListener(OnRecyclerViewItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
+    /**
+     * 每一项的点击事件
+     */
+    class OnItemClickListener implements View.OnClickListener {
+
+        private int position;
+        private TabBean tabBean;
+
+        public OnItemClickListener(int position, TabBean tabBean) {
+            this.position = position;
+            this.tabBean = tabBean;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(v, position, tabBean);
+            }
+        }
+    }
+
+    //============================================设置列表项点击事件===============================end
 
 }
