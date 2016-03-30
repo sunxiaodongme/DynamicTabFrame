@@ -1,9 +1,7 @@
 package com.example.sunxiaodong.dynamictabframe.DragSortAdapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +27,8 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
     private Context mContext;
     private OnStartDragListener mDragStartListener;
 
-    public DragSortAdapter(Context context, OnStartDragListener dragStartListener) {
+    public DragSortAdapter(Context context) {
         mContext = context;
-        mDragStartListener = dragStartListener;
     }
 
     public void update(List<TabBean> tabBeanList) {
@@ -63,10 +60,25 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, int position) {
         TabBean tabBean = mTabBeanList.get(position);
+        holder.textView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mDragStartListener != null) {
+                    mDragStartListener.onStartDrag(holder);
+                }
+                return true;
+            }
+        });
+        if (tabBean.isDefault()) {
+            holder.textView.setEnabled(false);
+        } else {
+
+            holder.textView.setEnabled(true);
+        }
         holder.textView.setText(tabBean.getName());
-        holder.rootView.setOnClickListener(new OnItemClickListener(position, tabBean));
+        holder.textView.setOnClickListener(new OnItemClickListener(position, tabBean));
     }
 
     @Override
@@ -76,12 +88,14 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        Log.i(SXD, TAG + "--onItemMove++fromPosition:" + fromPosition + ",toPosition:" + toPosition);
+        TabBean tabBean = mTabBeanList.get(toPosition);
+        if (tabBean.isDefault()) {
+            return true;
+        }
         if (toPosition > fromPosition) {
             //从前往后移动列表项
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mTabBeanList, i, i + 1);
-
             }
         } else {
             //从后往前移动列表项
@@ -121,14 +135,20 @@ public class DragSortAdapter extends RecyclerView.Adapter<DragSortAdapter.ItemVi
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+//            itemView.setBackgroundColor(Color.LTGRAY);
+            textView.setSelected(true);
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(0);
+//            itemView.setBackgroundColor(0);
+            textView.setSelected(false);
         }
 
+    }
+
+    public void setOnStartDragListener(OnStartDragListener onStartDragListener) {
+        mDragStartListener = onStartDragListener;
     }
 
     //============================================设置列表项点击事件===============================start

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.sunxiaodong.dynamictabframe.DragSortAdapter.DragSortAdapter;
 import com.example.sunxiaodong.dynamictabframe.DragSortAdapter.DragSortItemTouchHelperCallback;
+import com.example.sunxiaodong.dynamictabframe.DragSortAdapter.OnStartDragListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +79,7 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initMeRecyclerView() {
-        mMeDragSortAdapter = new DragSortAdapter(this, null);
+        mMeDragSortAdapter = new DragSortAdapter(this);
         mMeDragSortAdapter.setOnItemClickListener(new DragSortAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position, TabBean data) {
@@ -94,12 +95,18 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         mMeRecyclerView.setLayoutManager(layoutManager);
 
         ItemTouchHelper.Callback callback = new DragSortItemTouchHelperCallback(mMeDragSortAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(mMeRecyclerView);
+        mMeDragSortAdapter.setOnStartDragListener(new OnStartDragListener() {
+            @Override
+            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                itemTouchHelper.startDrag(viewHolder);
+            }
+        });
     }
 
     private void initMoreRecyclerView() {
-        mMoreDragSortAdapter = new DragSortAdapter(this, null);
+        mMoreDragSortAdapter = new DragSortAdapter(this);
         mMoreDragSortAdapter.setOnItemClickListener(new DragSortAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position, TabBean data) {
@@ -126,6 +133,10 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
             TabBean tabBean = new TabBean();
             tabBean.setId(i);
             tabBean.setName(mMeTabDef[i - 1]);
+            if (i < 3) {
+                //将前两项设置为默认项，不允许执行任何操作
+                tabBean.setDefault(true);
+            }
             meTabBeanList.add(tabBean);
         }
         mMeDragSortAdapter.update(meTabBeanList);

@@ -4,7 +4,10 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="dimen_1080p_1">0.33dp</dimen>
+    <dimen name="dimen_1080p_2">0.66dp</dimen>
+    <dimen name="dimen_1080p_6">2dp</dimen>
     <dimen name="dimen_1080p_9">3dp</dimen>
+    <dimen name="dimen_1080p_12">4dp</dimen>
     <dimen name="dimen_1080p_30">10dp</dimen>
     <dimen name="dimen_1080p_36">12dp</dimen>
     <dimen name="dimen_1080p_42">14dp</dimen>

@@ -9,6 +9,8 @@ public class TabBean {
 
     private String name;
 
+    private boolean isDefault;
+
     public int getId() {
         return id;
     }
@@ -23,6 +25,14 @@ public class TabBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 
 }

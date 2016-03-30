@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_selected="true" android:color="@color/color_ffcc3131" />
-    <item android:state_pressed="true" android:color="@color/color_ffb9b9b9" />
+    <item android:color="@color/color_ffb9b9b9" android:state_selected="true" />
+    <item android:color="@color/color_ffb9b9b9" android:state_pressed="true" />
+    <item android:color="@color/color_ffb9b9b9" android:state_long_pressable="true" />
+    <item android:color="@color/color_ffb9b9b9" android:state_enabled="false" />
     <item android:color="@color/color_ff454545" />
 
 </selector>
