@@ -73,7 +73,7 @@
             android:id="@+id/mask_layer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_50000000"
+            android:background="@color/color_000000"
             android:visibility="gone" />
 
         <!-- tab增加，删除处理层 -->

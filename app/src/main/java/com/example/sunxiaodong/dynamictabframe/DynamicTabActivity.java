@@ -1,5 +1,9 @@
 package com.example.sunxiaodong.dynamictabframe;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,8 +16,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -41,12 +43,20 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView mMeRecyclerView;
     private RecyclerView mMoreRecyclerView;
 
-    private DragSortAdapter mMeDragSortAdapter;
-    private DragSortAdapter mMoreDragSortAdapter;
+    private DragSortAdapter mMeDragSortAdapter;//我的标签适配器
+    private DragSortAdapter mMoreDragSortAdapter;//更改标签适配器
 
     private DynamicTabPagerAdapter mDynamicTabPagerAdapter;
 
-    private Animation mHideAnimation, mShowAnimation;
+    private boolean mIsTabOpera = false;//标签编辑 打开/关闭状态
+
+    private static final int SPAN_COUNT = 3;//grid列数
+
+    private static final int ANIM_DURATION = 500;//动画执行时长
+    private ObjectAnimator mMaskShowAnim;//遮罩层显示动画
+    private ObjectAnimator mTabDealShowAnim;//标签处理布局显示动画
+    private ObjectAnimator mMaskHideAnim;//遮罩层隐藏动画
+    private ObjectAnimator mTabDealHideAnim;//标签处理布局隐藏动画
 
     private Map<Integer, Fragment> mCurrAddedToFMFragmentMap = new HashMap<Integer, Fragment>();//当前添加到FM中的Fragment;
 
@@ -74,8 +84,6 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         mMoreRecyclerView = (RecyclerView) findViewById(R.id.more_recycler_view);
         initMeRecyclerView();
         initMoreRecyclerView();
-        mHideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
-        mShowAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
     }
 
     private void initMeRecyclerView() {
@@ -90,8 +98,7 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         mMeRecyclerView.setHasFixedSize(true);
         mMeRecyclerView.setAdapter(mMeDragSortAdapter);
 
-        final int spanCount = 3;
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, SPAN_COUNT);
         mMeRecyclerView.setLayoutManager(layoutManager);
 
         ItemTouchHelper.Callback callback = new DragSortItemTouchHelperCallback(mMeDragSortAdapter);
@@ -117,8 +124,7 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         mMoreRecyclerView.setHasFixedSize(true);
         mMoreRecyclerView.setAdapter(mMoreDragSortAdapter);
 
-        final int spanCount = 3;
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, SPAN_COUNT);
         mMoreRecyclerView.setLayoutManager(layoutManager);
 
         ItemTouchHelper.Callback callback = new DragSortItemTouchHelperCallback(mMoreDragSortAdapter);
@@ -151,8 +157,6 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         refresh();
     }
 
-    private boolean mIsTabOpera = false;
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -173,20 +177,92 @@ public class DynamicTabActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private ObjectAnimator createMaskShowAnim() {
+        if (mMaskShowAnim == null) {
+            mMaskShowAnim = ObjectAnimator.ofFloat(mMaskView, "alpha", 0.0f, 0.5f);
+        }
+        return mMaskShowAnim;
+    }
+
+    private ObjectAnimator createTabDealShowAnim() {
+        if (mTabDealShowAnim == null) {
+            mTabDealShowAnim = ObjectAnimator.ofFloat(mTabDealLayout, "alpha", 0.0f, 1.0f);
+        }
+        return mTabDealShowAnim;
+    }
+
+    private ObjectAnimator createTabDealLayoutTranInAnim() {
+        float tabDealLayoutHeight = mTabDealLayout.getHeight();
+        ObjectAnimator tabDealLayoutTranInAnim = ObjectAnimator.ofFloat(mTabDealLayout, "translationY", -tabDealLayoutHeight, 0);
+        return tabDealLayoutTranInAnim;
+    }
+
     private void openUserChannelOpera() {
-        mMaskView.setVisibility(View.VISIBLE);
-        mTabDealLayout.setVisibility(View.VISIBLE);
-        mTabLayout.setVisibility(View.GONE);
-        mTitle.setVisibility(View.VISIBLE);
-        mTabDealLayout.startAnimation(mShowAnimation);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(ANIM_DURATION);
+        animatorSet.play(createMaskShowAnim()).with(createTabDealShowAnim()).with(createTabDealLayoutTranInAnim());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mTitle.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.GONE);
+                mMaskView.setVisibility(View.VISIBLE);
+                mTabDealLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+
+        });
+        animatorSet.start();
+    }
+
+    private ObjectAnimator createMaskHideAnim() {
+        if (mMaskHideAnim == null) {
+            mMaskHideAnim = ObjectAnimator.ofFloat(mMaskView, "alpha", 0.5f, 0.0f);
+        }
+        return mMaskHideAnim;
+    }
+
+    private ObjectAnimator createTabDealHideAnim() {
+        if (mTabDealHideAnim == null) {
+            mTabDealHideAnim = ObjectAnimator.ofFloat(mTabDealLayout, "alpha", 1.0f, 0.0f);
+        }
+        return mTabDealHideAnim;
+    }
+
+    private ObjectAnimator createTabDealLayoutTranOutAnim() {
+        float tabDealLayoutHeight = mTabDealLayout.getHeight();
+        ObjectAnimator tabDealLayoutTranInAnim = ObjectAnimator.ofFloat(mTabDealLayout, "translationY", 0, -tabDealLayoutHeight);
+        return tabDealLayoutTranInAnim;
     }
 
     private void closeUserChannelOpera() {
-        mMaskView.setVisibility(View.GONE);
-        mTabDealLayout.setVisibility(View.GONE);
-        mTabLayout.setVisibility(View.VISIBLE);
-        mTitle.setVisibility(View.GONE);
-        mTabDealLayout.startAnimation(mHideAnimation);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(ANIM_DURATION);
+        animatorSet.play(createMaskHideAnim()).with(createTabDealHideAnim()).with(createTabDealLayoutTranOutAnim());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mTabLayout.setVisibility(View.VISIBLE);
+                mTitle.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mMaskView.setVisibility(View.GONE);
+                mTabDealLayout.setVisibility(View.INVISIBLE);
+            }
+
+        });
+        animatorSet.start();
         refresh();
     }
 
